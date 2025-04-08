@@ -64,13 +64,13 @@ async def start(update: Update, context: CallbackContext):
 
     # अगर user पहले से data में नहीं है तो नया entry बनाओ
     if user_id not in data:
-        data[user_id] = {"balance": 0.50, "referrals": [], "last_bonus": 0, "referral_log": []}
+        data[user_id] = {"balance": 1, "referrals": [], "last_bonus": 0, "referral_log": []}
 
         # ✅ Referrer का data जोड़ो
         if referrer_id and referrer_id != user_id:
             if referrer_id not in data:
-                data[referrer_id] = {"balance": 0.50, "referrals": []}  # fallback in case referrer is new
-            data[referrer_id]["balance"] += 0.50
+                data[referrer_id] = {"balance": 1, "referrals": []}  # fallback in case referrer is new
+            data[referrer_id]["balance"] += 1
             if user_id not in data[referrer_id]["referrals"]:
                 data[referrer_id]["referrals"].append(user_id)
             data[referrer_id].setdefault("referral_log", [])
@@ -187,7 +187,7 @@ async def handle_button_click(update: Update, context: CallbackContext):
         bot_username = context.application.bot.username
         referral_link = f"https://t.me/{bot_username}?start={query.from_user.id}"
         await query.message.reply_text(
-            f"📢 *Share your referral link:*\n\n🔗 {referral_link}\n👥 Earn Upto ₹2 per invite!",
+            f"📢 *Share your referral link:*\n\n🔗 {referral_link}\n👥 Earn Upto ₹3 per invite!",
             parse_mode="Markdown"
         )
     elif query.data == "withdraw":
@@ -212,7 +212,7 @@ async def check_balance(update: Update, context: CallbackContext):
     await update.effective_message.reply_text(
         f"💰 Your Balance: ₹{balance}\n"
         f"👥 Total Referrals: {referrals}\n"
-        f"💸 Minimum Withdrawal: ₹2",
+        f"💸 Minimum Withdrawal: ₹5",
         parse_mode="Markdown"
     )
 
@@ -222,13 +222,13 @@ async def withdraw_request(update: Update, context: CallbackContext):
     user_id = str(query.from_user.id)
     data = load_data()
 
-    if data.get(user_id, {}).get("balance", 0) >= 2:
+    if data.get(user_id, {}).get("balance", 0) >= 5:
         await query.answer()
         await query.message.reply_text("💸 Please send your *UPI ID*:", parse_mode="Markdown")
         context.user_data["awaiting_upi"] = True
     else:
         await query.answer()
-        await query.message.reply_text("❌ *You need at least ₹2 to withdraw.*", parse_mode="Markdown")
+        await query.message.reply_text("❌ *You need at least ₹5 to withdraw.*", parse_mode="Markdown")
 
 # ✅ Handle Text Messages
 # ✅ Handle Text Messages (Merged)
@@ -268,7 +268,7 @@ async def handle_message(update: Update, context: CallbackContext):
         context.user_data["awaiting_upi"] = False
         context.user_data["awaiting_amount"] = True
         await update.message.reply_text(
-            "✅ *UPI ID saved!* Now enter the amount you want to withdraw (Minimum ₹2):",
+            "✅ *UPI ID saved!* Now enter the amount you want to withdraw (Minimum ₹5):",
             parse_mode="Markdown"
         )
         return
@@ -280,8 +280,8 @@ async def handle_message(update: Update, context: CallbackContext):
             return
 
         amount = int(message)
-        if amount < 2:
-            await update.message.reply_text("❌ Minimum withdrawal is ₹2.")
+        if amount < 5:
+            await update.message.reply_text("❌ Minimum withdrawal is ₹5.")
             return
 
         if data.get(user_id, {}).get("balance", 0) >= amount:

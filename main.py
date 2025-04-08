@@ -212,7 +212,7 @@ async def check_balance(update: Update, context: CallbackContext):
     await update.effective_message.reply_text(
         f"💰 Your Balance: ₹{balance}\n"
         f"👥 Total Referrals: {referrals}\n"
-        f"💸 Minimum Withdrawal: ₹3",
+        f"💸 Minimum Withdrawal: ₹2",
         parse_mode="Markdown"
     )
 
@@ -222,13 +222,13 @@ async def withdraw_request(update: Update, context: CallbackContext):
     user_id = str(query.from_user.id)
     data = load_data()
 
-    if data.get(user_id, {}).get("balance", 0) >= 3:
+    if data.get(user_id, {}).get("balance", 0) >= 2:
         await query.answer()
         await query.message.reply_text("💸 Please send your *UPI ID*:", parse_mode="Markdown")
         context.user_data["awaiting_upi"] = True
     else:
         await query.answer()
-        await query.message.reply_text("❌ *You need at least ₹3 to withdraw.*", parse_mode="Markdown")
+        await query.message.reply_text("❌ *You need at least ₹2 to withdraw.*", parse_mode="Markdown")
 
 # ✅ Handle Text Messages
 # ✅ Handle Text Messages (Merged)
@@ -268,7 +268,7 @@ async def handle_message(update: Update, context: CallbackContext):
         context.user_data["awaiting_upi"] = False
         context.user_data["awaiting_amount"] = True
         await update.message.reply_text(
-            "✅ *UPI ID saved!* Now enter the amount you want to withdraw (Minimum ₹3):",
+            "✅ *UPI ID saved!* Now enter the amount you want to withdraw (Minimum ₹2):",
             parse_mode="Markdown"
         )
         return
@@ -280,8 +280,8 @@ async def handle_message(update: Update, context: CallbackContext):
             return
 
         amount = int(message)
-        if amount < 3:
-            await update.message.reply_text("❌ Minimum withdrawal is ₹3.")
+        if amount < 2:
+            await update.message.reply_text("❌ Minimum withdrawal is ₹2.")
             return
 
         if data.get(user_id, {}).get("balance", 0) >= amount:
@@ -392,7 +392,7 @@ REWARDS_FILE = "rewards.json"
 
 def load_rewards():
     if not os.path.exists(REWARDS_FILE):
-        return [10, 5, 2]  # default rewards
+        return [5, 3, 2]  # default rewards
     with open(REWARDS_FILE, "r") as f:
         return json.load(f)
 
@@ -406,7 +406,7 @@ async def set_rewards(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
 
     if not context.args:
-        await update.message.reply_text("❌ Usage: /setrewards 10 5 2")
+        await update.message.reply_text("❌ Usage: /setrewards 5 3 2")
         return
 
     try:
@@ -414,7 +414,7 @@ async def set_rewards(update: Update, context: ContextTypes.DEFAULT_TYPE):
         save_rewards(rewards)
         await update.message.reply_text(f"✅ Rewards updated: {rewards}")
     except:
-        await update.message.reply_text("❌ Invalid format! Use /setrewards 10 5 2")
+        await update.message.reply_text("❌ Invalid format! Use /setrewards 5 3 2")
 
 
 
@@ -530,7 +530,7 @@ from telegram.constants import ParseMode
 
 async def top_referrals(update: Update, context: CallbackContext):
     users = load_users()
-    rewards = load_rewards()  # e.g., [10, 5, 2]
+    rewards = load_rewards()  # e.g., [5, 3, 2]
 
     # Get top 3 users based on referrals in last 24 hours
     top_users = sorted(

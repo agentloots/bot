@@ -31,7 +31,7 @@ def save_data(data):
         json.dump(data, f, indent=4)
 
 # ✅ Bot Token
-TOKEN = "7213154954:AAEgZPzrfyL6ZyZuo4NUfmoBd0i6XnWIqGI"
+TOKEN = "7947105114:AAF3NajrMvkjmcOQ_Aeb7Uy9VqFrFZTGGcc"
 
 # ✅ Telegram Channels
 CHANNELS = ["profitpaisaa", "visalearning", "esyloot", "profitroz"]
@@ -512,7 +512,7 @@ async def process_daily_rewards(context: ContextTypes.DEFAULT_TYPE):
 
 
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
-application = Application.builder().token("7213154954:AAEgZPzrfyL6ZyZuo4NUfmoBd0i6XnWIqGI").build()
+application = Application.builder().token("7947105114:AAF3NajrMvkjmcOQ_Aeb7Uy9VqFrFZTGGcc").build()
 
 scheduler = AsyncIOScheduler()
 scheduler.add_job(process_daily_rewards, 'cron', hour=0, minute=0, args=[application.bot])

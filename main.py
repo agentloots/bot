@@ -21,7 +21,7 @@ def save_data(data):
         json.dump(data, f, indent=4)
 
 # ✅ Bot Token
-TOKEN = "7213154954:AAEgZPzrfyL6ZyZuo4NUfmoBd0i6XnWIqGI"
+TOKEN = "7947105114:AAGrypKuaDxO_heLv5GzqWUqqQDgeyD-qFA"
 
 # ✅ Telegram Channels
 CHANNELS = ["profitpaisaa", "visalearning", "esyloot", "profitroz"]
